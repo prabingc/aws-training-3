@@ -6,9 +6,10 @@ pipeline {
     stages {
         stage('Create new pipelines') {
             steps {
+                withCredentials([usernamePassword(credentialsId: 'jenkins_call', usernameVariable: 'JENKINS_USER', passwordVariable: 'JENKINS_TOKEN')]) {
                 sh '''
                     curl -O http://localhost:8080/jnlpJars/jenkins-cli.jar
-                    java -jar jenkins-cli.jar -s http://localhost:8080  -auth ${jenkin_cred_usr}:${jenkin_cred_psw} create-job automation1 < eks_cluster.xml
+                    java -jar jenkins-cli.jar -s http://localhost:8080  -u "$JENKINS_USER:$JENKINS_TOKEN" create-job automation1 < eks_cluster.xml
                 '''
             }
         }
