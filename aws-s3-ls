@@ -22,4 +22,13 @@ pipeline {
             }
         }
     }
+    post {
+        success {
+            echo 'Triggering Next Stage pipeline...'
+            build job: 'docker_build'
+        }
+        failure {
+            echo 'Cluster build failed. Not triggering docker image build.'
+        }
+    }    
 }
