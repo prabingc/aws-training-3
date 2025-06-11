@@ -1,0 +1,55 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_TAG = 'latest'
+    }
+    stages {
+        stage('Load Shared Vars') {
+            steps {
+                script {
+                def vars = load 'vars/sharedVars.groovy'
+                env.REGION = vars.REGION
+                env.ECR_REGISTRY = vars.ECR_REGISTRY
+                env.ECR_REPO_NAME = vars.ECR_REPO_NAME
+                env.IMAGE_URI = "${env.ECR_REGISTRY}/${env.ECR_REPO_NAME}:${BUILD_NUMBER}"
+                }
+            }
+            }           
+        stage('Download files') {
+            steps {
+                sh '''
+                    curl -o Dockerfile https://raw.githubusercontent.com/prabingc/aws-training-2/main/capstone/dockerfile_website
+                    curl -o package.json https://github.com/prabingc/aws-training-2/main/capstone/package.json
+                '''
+            }
+        }
+
+        stage('Debug docker') {
+            steps {
+                sh 'which docker'
+                sh 'docker --version'
+            }
+        }        
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t $IMAGE_URI --load .'
+            }
+        }
+
+        stage('Login to ECR') {
+            steps {
+            withAWS(credentials: 'aws-creds', region: env.AWS_REGION) {
+                sh 'aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY'
+            }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                sh 'docker push $IMAGE_URI'
+            }
+        }
+    }
+}
