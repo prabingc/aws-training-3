@@ -1,10 +1,14 @@
 pipeline {
     agent any
+    environment {
+    jenkin_cred = credentials('jenkins_call') // Reference the credentials ID
+    }
     stages {
-        stage('Download files') {
+        stage('Create new pipelines') {
             steps {
                 sh '''
-                    curl -o cluster.yaml https://raw.githubusercontent.com/prabingc/aws-training-2/main/capstone/cluster.yaml
+                    curl -O http://localhost:8080/jnlpJars/jenkins-cli.jar
+                    java -jar jenkins-cli.jar -s http://localhost:8080  -auth ${jenkin_cred_usr}:${jenkin_cred_psw} create-job automation1 < eks_cluster.xml
                 '''
             }
         }
@@ -20,7 +24,7 @@ pipeline {
                     steps {
                         script {
                             withAWS(credentials: 'aws-creds', region: env.AWS_REGION) {
-                                sh 'eksctl create cluster -f cluster.yaml'
+                                sh 'eksctl create cluster -f cluster_definition.yaml'
                             }
                         }
                     }
