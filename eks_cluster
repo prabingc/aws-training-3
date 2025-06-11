@@ -19,7 +19,7 @@ pipeline {
                 script {
                 def vars = load 'vars/sharedVars.groovy'
                 env.AWS_REGION = vars.AWS_REGION
-                env.CLUSTER_NAME = var.CLUSTER_NAME
+                env.CLUSTER_NAME = vars.CLUSTER_NAME
                 }
             }
             }  
