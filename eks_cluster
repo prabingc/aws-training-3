@@ -9,7 +9,13 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'jenkins_call', usernameVariable: 'JENKINS_USER', passwordVariable: 'JENKINS_TOKEN')]) {
                 sh '''
                     curl -O http://localhost:8080/jnlpJars/jenkins-cli.jar
-                    java -jar jenkins-cli.jar -s http://localhost:8080  -auth "$JENKINS_USER:$JENKINS_TOKEN" create-job build_images < docker_build.xml
+                    if java -jar jenkins-cli.jar -s http://localhost:8080  -auth "$JENKINS_USER:$JENKINS_TOKEN" get-job build_images > /dev/null 2>&1; then
+                        echo "Updating existing job"
+                        java -jar jenkins-cli.jar -s http://localhost:8080  -auth "$JENKINS_USER:$JENKINS_TOKEN" update-job build_images < docker_build.xml
+                    else
+                        echo "Createing new job"
+                        java -jar jenkins-cli.jar -s http://localhost:8080  -auth "$JENKINS_USER:$JENKINS_TOKEN" create-job build_images < docker_build.xml
+                    fi
                 '''
                     }
                 }
@@ -27,11 +33,20 @@ pipeline {
                     steps {
                         script {
                             withAWS(credentials: 'aws-creds', region: env.AWS_REGION) {
+                                def clusterExists = sh(
+                                    script: "eksctl get cluster --name ${CLUSTER_NAME} --region ${AWS_REGION}",
+                                    returnStatus: true
+                                ) == 0
+                                if (clusterExists) {
+                                    echo "EKS Cluster '${CLUSTER_NAME}' already exists. Skipping creation."
+                                    } 
+                                else {
                                 sh """
                                 export CLUSTER_NAME=${CLUSTER_NAME}
                                 envsubst < cluster_definition.yaml > processed.yaml
                                 eksctl create cluster -f processed.yaml
                                 """
+                                }
                             }
                         }
                     }
