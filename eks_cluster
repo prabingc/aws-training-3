@@ -28,7 +28,7 @@ pipeline {
                         script {
                             withAWS(credentials: 'aws-creds', region: env.AWS_REGION) {
                                 sh """
-                                export CLUSTER_NAME=vars.CLUSTER_NAME
+                                export CLUSTER_NAME=${CLUSTER_NAME}
                                 envsubst < cluster_definition.yaml > processed.yaml
                                 eksctl create cluster -f processed.yaml
                                 """
