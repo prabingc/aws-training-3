@@ -25,7 +25,8 @@ pipeline {
     post {
         success {
             echo 'Triggering Next Stage pipeline...'
-            build job: 'docker_build'
+            build job: 'docker_build',
+            wait: false
         }
         failure {
             echo 'Cluster build failed. Not triggering docker image build.'

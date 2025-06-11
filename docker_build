@@ -29,12 +29,13 @@ pipeline {
             steps {
                 sh 'which docker'
                 sh 'docker --version'
+                sh 'docker buildx version'
             }
         }        
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $IMAGE_URI --load .'
+                sh 'docker buildx build -t $IMAGE_URI --load .'
             }
         }
 
