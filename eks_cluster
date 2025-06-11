@@ -9,7 +9,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'jenkins_call', usernameVariable: 'JENKINS_USER', passwordVariable: 'JENKINS_TOKEN')]) {
                 sh '''
                     curl -O http://localhost:8080/jnlpJars/jenkins-cli.jar
-                    java -jar jenkins-cli.jar -s http://localhost:8080  -auth "$JENKINS_USER:$JENKINS_TOKEN" create-job automation1 < eks_cluster.xml
+                    java -jar jenkins-cli.jar -s http://localhost:8080  -auth "$JENKINS_USER:$JENKINS_TOKEN" create-job build_images < docker_build.xml
                 '''
                     }
                 }
@@ -19,6 +19,7 @@ pipeline {
                 script {
                 def vars = load 'vars/sharedVars.groovy'
                 env.AWS_REGION = vars.AWS_REGION
+                env.CLUSTER_NAME = var.CLUSTER_NAME
                 }
             }
             }  

@@ -2,9 +2,9 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: eventsapp-cluster
+  name: ${CLUSTER_NAME}
   region: us-east-2
-  version: "1.30"
+  version: "1.32"
 
 kubernetesNetworkConfig: 
   serviceIPv4CIDR: 10.100.0.0/16
@@ -21,7 +21,7 @@ iam:
     wellKnownPolicies:
       autoScaler: true
   - metadata:
-      name: aws-load-balancer-controller-pg
+      name: aws-lb-controller-pg
       namespace: kube-system
     wellKnownPolicies:
       awsLoadBalancerController: true
@@ -59,7 +59,7 @@ managedNodeGroups:
 fargateProfiles:
   - name: on-fargate
     selectors:
-      - namespace: on-fargat
+      - namespace: on-fargate
   - name: myprofile
     selectors: 
     - namespace: prod
