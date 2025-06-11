@@ -12,7 +12,7 @@ pipeline {
                 env.AWS_REGION = vars.AWS_REGION
                 env.ECR_REGISTRY = vars.ECR_REGISTRY
                 env.ECR_REPO_NAME = vars.ECR_REPO_NAME
-                env.IMAGE_URI = "${env.ECR_REGISTRY}/${env.ECR_REPO_NAME}:${BUILD_NUMBER}"
+                env.IMAGE_URI = "${env.ECR_REGISTRY}/${env.ECR_REPO_NAME}"
                 }
             }
             }           
@@ -35,7 +35,8 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker buildx build -t $IMAGE_URI --load .'
+                sh 'docker buildx build -t $IMAGE_URI:$BUILD_NUMBER --load .'
+                sh 'docker buildx build -t $IMAGE_URI:latest --load .'
             }
         }
 
@@ -49,7 +50,8 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                sh 'docker push $IMAGE_URI'
+                sh 'docker push $IMAGE_URI:$BUILD_NUMBER'
+                sh 'docker push $IMAGE_URI:latest'
             }
         }
     }
