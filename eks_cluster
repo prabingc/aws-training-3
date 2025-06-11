@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+    stages {
+        stage('Download files') {
+            steps {
+                sh '''
+                    curl -o cluster.yaml https://raw.githubusercontent.com/prabingc/aws-training-2/main/capstone/cluster.yaml
+                '''
+            }
+        }
+        stage('Load Shared Vars') {
+            steps {
+                script {
+                def vars = load 'vars/sharedVars.groovy'
+                env.AWS_REGION = vars.AWS_REGION
+                }
+            }
+            }  
+        stage('Create EKS Cluster') {
+                    steps {
+                        script {
+                            withAWS(credentials: 'aws-creds', region: env.AWS_REGION) {
+                                sh 'eksctl create cluster -f cluster.yaml'
+                            }
+                        }
+                    }
+                }
+            }
+    }
