@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+    environment {
+        AWS_DEFAULT_REGION = 'us-east-1'
+    }
+    stages {
+        stage('Load Shared Vars') {
+            steps {
+                script {
+                def vars = load 'vars/sharedVars.groovy'
+                env.REGION = vars.REGION
+                env.CLUSTER_NAME = vars.CLUSTER_NAME
+                env.ECR_REPO = vars.ECR_REPO
+                }
+            }
+            }        
+        stage('List S3 Buckets') {
+            steps {
+                withAWS(credentials: 'aws-creds', region: env.REGION)  {
+                    sh 'aws s3 ls'
+                }
+            }
+        }
+    }
+}
