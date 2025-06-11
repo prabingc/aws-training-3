@@ -8,7 +8,7 @@ pipeline {
             steps {
                 script {
                 def vars = load 'vars/sharedVars.groovy'
-                env.REGION = vars.REGION
+                env.REAWS_REGIONION = vars.AWS_REGION
                 env.CLUSTER_NAME = vars.CLUSTER_NAME
                 env.ECR_REPO = vars.ECR_REPO
                 }
@@ -16,7 +16,7 @@ pipeline {
             }        
         stage('List S3 Buckets') {
             steps {
-                withAWS(credentials: 'aws-creds', region: env.REGION)  {
+                withAWS(credentials: 'aws-creds', region: env.AWS_REGION)  {
                     sh 'aws s3 ls'
                 }
             }
