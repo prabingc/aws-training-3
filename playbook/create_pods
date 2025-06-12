@@ -10,9 +10,6 @@ pipeline {
         AWS_REGION = 'us-east-2'
         CLUSTER_NAME = 'prabin-eks'
     }
-    environment {
-        KUBECONFIG = '/root/.kube/config' // adjust if different path is used in container
-    }
     stages {
         stage('Deploy Pod to EKS') {
             steps {
