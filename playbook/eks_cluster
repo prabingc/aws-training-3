@@ -11,10 +11,10 @@ pipeline {
                     curl -O http://localhost:8080/jnlpJars/jenkins-cli.jar
                     if java -jar jenkins-cli.jar -s http://localhost:8080  -auth "$JENKINS_USER:$JENKINS_TOKEN" get-job build_images > /dev/null 2>&1; then
                         echo "Updating existing job"
-                        java -jar jenkins-cli.jar -s http://localhost:8080  -auth "$JENKINS_USER:$JENKINS_TOKEN" update-job build_images < docker_build.xml
+                        java -jar jenkins-cli.jar -s http://localhost:8080  -auth "$JENKINS_USER:$JENKINS_TOKEN" update-job build_images < jenkins_item/docker_build.xml
                     else
                         echo "Createing new job"
-                        java -jar jenkins-cli.jar -s http://localhost:8080  -auth "$JENKINS_USER:$JENKINS_TOKEN" create-job build_images < docker_build.xml
+                        java -jar jenkins-cli.jar -s http://localhost:8080  -auth "$JENKINS_USER:$JENKINS_TOKEN" create-job build_images < jenkins_item/docker_build.xml
                     fi
                 '''
                     }
