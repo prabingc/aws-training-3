@@ -29,7 +29,6 @@ pipeline {
                     """
 
                     writeFile file: 'nginx-pod.yaml', text: podManifest
-                    agent {label 'master'}
                     sh 'kubectl apply -f nginx-pod.yaml'
                 }
             }
