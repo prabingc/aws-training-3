@@ -13,6 +13,7 @@ pipeline {
     stages {
         stage('Deploy Pod to EKS') {
             steps {
+            container('kubectl') {                    
                 script {
                     def podManifest = """
                     apiVersion: v1
@@ -28,7 +29,6 @@ pipeline {
                     """
 
                     writeFile file: 'nginx-pod.yaml', text: podManifest
-                container('kubectl') {                    
                     sh 'kubectl apply -f nginx-pod.yaml'
                 }
                 }
