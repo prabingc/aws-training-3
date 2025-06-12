@@ -1,8 +1,7 @@
 pipeline {
     agent {
         kubernetes {
-            label 'jenkins-agent'
-            defaultContainer 'jnlp' // must match container name in pod template
+            inheritFrom 'jenkins-agent'
         }
     }
 
