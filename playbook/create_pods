@@ -1,9 +1,16 @@
 pipeline {
-    agent any
+    agent {
+        kubernetes {
+            label 'jenkins-agent'
+            defaultContainer 'jnlp' // must match container name in pod template
+        }
+    }
+
     environment {
         AWS_REGION = 'us-east-2'
         CLUSTER_NAME = 'prabin-eks'
     }
+
     stages {
         stage('Deploy Pod to EKS') {
             steps {
@@ -22,6 +29,7 @@ pipeline {
                     """
 
                     writeFile file: 'nginx-pod.yaml', text: podManifest
+                    agent {label 'master'}
                     sh 'kubectl apply -f nginx-pod.yaml'
                 }
             }
