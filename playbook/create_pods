@@ -12,16 +12,6 @@ pipeline {
     }
 
     stages {
-        stage('Configure Kubeconfig') {
-            steps {
-                withAWS(credentials: 'aws-creds', region: "${AWS_REGION}") {
-                    sh """
-                        aws eks update-kubeconfig --name ${CLUSTER_NAME} --region ${AWS_REGION}
-                    """
-                }
-            }
-        }
-
         stage('Deploy Pod to EKS') {
             steps {
                 script {
