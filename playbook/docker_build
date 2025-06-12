@@ -55,4 +55,14 @@ pipeline {
             }
         }
     }
+    post {
+        success {
+            echo 'Triggering Next Stage pipeline...'
+            build job: 'create_pods',
+            wait : false 
+        }
+        failure {
+            echo 'Build image pipeline failed. Not triggering create Pod Pipeline.'
+        }
+    }    
 }

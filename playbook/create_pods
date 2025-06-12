@@ -1,19 +1,18 @@
 pipeline {
-    agent {
-        kubernetes {
-            inheritFrom 'jenkins-agent'
-        }
-    }
-
-    environment {
-        AWS_REGION = 'us-east-2'
-        CLUSTER_NAME = 'prabin-eks'
-    }
+    agent all
 
     stages {
-        stage('Deploy Pod to EKS') {
+        stage('Load Shared Vars') {
             steps {
-            container('kubectl') {                    
+                script {
+                def vars = load 'vars/sharedVars.groovy'
+                env.AWS_REGION = vars.AWS_REGION
+                env.CLUSTER_NAME = vars.CLUSTER_NAME
+                }
+            }
+            }          
+        stage('Deploy Pod to EKS') {
+            steps {               
                 script {
                     def podManifest = """
                     apiVersion: v1
@@ -30,7 +29,6 @@ pipeline {
 
                     writeFile file: 'nginx-pod.yaml', text: podManifest
                     sh 'kubectl apply -f nginx-pod.yaml'
-                }
                 }
             }
         }
