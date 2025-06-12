@@ -1,11 +1,5 @@
 pipeline {
-    agent {
-        kubernetes {
-            label 'jenkins-agent'
-            defaultContainer 'jnlp' // must match container name in pod template
-        }
-    }
-
+    agent any
     environment {
         AWS_REGION = 'us-east-2'
         CLUSTER_NAME = 'prabin-eks'
