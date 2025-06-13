@@ -15,7 +15,7 @@ Learning from week 3 of training
   - Pipeline: AWS Steps
   - Kubernetes plugin
 
-- Update file vars/sharedVars.groovy to reflect the values in your account. Currently it is using resource in my account so pipelines will fail.
+- Update file ***vars/sharedVars.groovy*** to reflect the values in your account. Currently it is using resource in my account so pipelines will fail.
 
 Jenkins playbook we are using require buildx plugin be installed for docker; here are the steps to install and validate.
 ```
