@@ -68,3 +68,9 @@ java -jar jenkins-cli.jar -s http://localhost:8080  -auth <jenkins_username>:<to
 
     Upon successful completion of create_pods pipeline you will get:
    - 1 Pod running NGINX in your eks cluster.
+
+- To Validate the pods are running, we can use Jenkins server which as kubectl installed.
+   ```
+   aws eks update-kubeconfig --region <your region>  --name <eks cluster name>
+   kubectl get pods
+   ```
