@@ -32,7 +32,7 @@ pipeline {
                     kubectl config current-context
                     kubectl config get-contexts
                     aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
-                    kubectl apply -f nginx-pod.yaml
+                    kubectl apply -f nginx-pod.yaml --validate=false
                     '''
                 }
             }
