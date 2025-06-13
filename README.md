@@ -74,3 +74,11 @@ java -jar jenkins-cli.jar -s http://localhost:8080  -auth <jenkins_username>:<to
    aws eks update-kubeconfig --region <your region>  --name <eks cluster name>
    kubectl get pods
    ```
+
+- Pipeline "create_pods" might fail due to access restriction; update the Access policy in EKS cluster.
+   - Go to EKS cluster -> Access -> Create Access Entry
+      - Find the IAM role (attached to Jenkins EC2) from dropdown in ***IAM principal ARN***. 
+      - Next
+      - Under Policy name "***AmazonEKSAdminPolicy***"; Scope ***Cluster*** -> Add policy
+      - Next
+      - Create
