@@ -19,10 +19,10 @@ pipeline {
                                         
                     if java -jar jenkins-cli.jar -s http://localhost:8080  -auth "$JENKINS_USER:$JENKINS_TOKEN" get-job create_pods > /dev/null 2>&1; then
                         echo "Updating existing create_pods"
-                        java -jar jenkins-cli.jar -s http://localhost:8080  -auth "$JENKINS_USER:$JENKINS_TOKEN" update-job create_pods < jenkins_item/docker_build.xml
+                        java -jar jenkins-cli.jar -s http://localhost:8080  -auth "$JENKINS_USER:$JENKINS_TOKEN" update-job create_pods < jenkins_item/create_pods.xml
                     else
                         echo "Createing new create_pods"
-                        java -jar jenkins-cli.jar -s http://localhost:8080  -auth "$JENKINS_USER:$JENKINS_TOKEN" create-job create_pods < jenkins_item/docker_build.xml
+                        java -jar jenkins-cli.jar -s http://localhost:8080  -auth "$JENKINS_USER:$JENKINS_TOKEN" create-job create_pods < jenkins_item/create_pods.xml
                     fi
                 '''
                     }
