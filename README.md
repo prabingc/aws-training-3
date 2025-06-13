@@ -82,3 +82,4 @@ java -jar jenkins-cli.jar -s http://localhost:8080  -auth <jenkins_username>:<to
       - Under Policy name "***AmazonEKSAdminPolicy***"; Scope ***Cluster*** -> Add policy
       - Next
       - Create
+   Once this is done you can re-run the ***build-eks-cluster*** (it will skip if cluster exist, but does trigger other 2 pipelines) or only run ***create_pods*** pipeline.
