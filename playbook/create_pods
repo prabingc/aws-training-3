@@ -28,7 +28,12 @@ pipeline {
                     """
 
                     writeFile file: 'nginx-pod.yaml', text: podManifest
-                    sh 'kubectl apply -f nginx-pod.yaml'
+                    sh '''
+                    kubectl config current-context
+                    kubectl config get-contexts
+                    aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
+                    kubectl apply -f nginx-pod.yaml
+                    '''
                 }
             }
         }
